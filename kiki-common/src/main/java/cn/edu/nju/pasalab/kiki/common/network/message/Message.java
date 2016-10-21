@@ -2,12 +2,10 @@ package cn.edu.nju.pasalab.kiki.common.network.message;
 
 import io.netty.buffer.ByteBuf;
 
-public interface Message {
-  void encode(ByteBuf out);
+public interface Message extends Encodable {
+  Type getType();
 
-  int getEncodedLength();
-
-  enum Type implements Message {
+  enum Type implements Encodable {
     CREATE_ID_STORE_REQUEST(0),
     CREATE_ID_STORE_RESPONSE(1),
     ENCODE_REQUEST(2),

@@ -32,6 +32,24 @@ public final class ErrorMessage extends AbstractMessage {
 
   @Override
   public void encode(ByteBuf out) {
+    getType().encode(out);
+    try {
+      byte[] buf = info.getBytes(CHAR_SET);
+      out.writeBytes(buf);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
+  public static ErrorMessage decode(ByteBuf in) {
+    int len = in.readableBytes();
+    byte[] buf = new byte[len];
+    in.readBytes(buf);
+    try {
+      String info = new String(buf, CHAR_SET);
+      return new ErrorMessage(info);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
