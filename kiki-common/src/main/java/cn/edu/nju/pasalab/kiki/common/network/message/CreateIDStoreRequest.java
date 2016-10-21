@@ -6,12 +6,16 @@ public final class CreateIDStoreRequest extends AbstractMessage {
   private final int storeID;
 
   public CreateIDStoreRequest(int storeID) {
-    super(Type.CREATE_ID_STORE_REQUEST);
     this.storeID = storeID;
   }
 
   public int getStoreID() {
     return storeID;
+  }
+
+  @Override
+  public Type getType() {
+    return Type.CREATE_ID_STORE_REQUEST;
   }
 
   @Override
