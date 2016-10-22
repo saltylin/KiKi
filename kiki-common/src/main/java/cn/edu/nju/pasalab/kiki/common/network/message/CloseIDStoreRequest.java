@@ -6,7 +6,7 @@ public final class CloseIDStoreRequest extends AbstractMessage {
   private final int storeID;
 
   public CloseIDStoreRequest(int storeID) {
-    this.storeID = storeID;
+    this.storeID  = storeID;
   }
 
   public int getStoreID() {
@@ -26,7 +26,7 @@ public final class CloseIDStoreRequest extends AbstractMessage {
   @Override
   public void encode(ByteBuf out) {
     getType().encode(out);
-    out.writeInt(storeID);
+    out.writeInt(getStoreID());
   }
 
   public static CloseIDStoreRequest decode(ByteBuf in) {
