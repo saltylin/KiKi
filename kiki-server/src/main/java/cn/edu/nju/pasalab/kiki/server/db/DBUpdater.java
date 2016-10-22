@@ -2,6 +2,7 @@ package cn.edu.nju.pasalab.kiki.server.db;
 
 import cn.edu.nju.pasalab.kiki.common.Constants;
 import cn.edu.nju.pasalab.kiki.common.util.BytesUtils;
+import cn.edu.nju.pasalab.kiki.server.StoreMeta;
 import cn.edu.nju.pasalab.kiki.server.meta.EncodeQuery;
 import cn.edu.nju.pasalab.kiki.server.resource.QueryPool;
 
@@ -22,7 +23,7 @@ public final class DBUpdater implements Runnable, Closeable {
    * The index used to be set as the ID of the input key. Since now for each store there's only one
    * {@link DBUpdater}, no concurrent problems will occur.
    */
-  private long index;
+  private volatile long index;
   private final int encodeStoreID;
   private final int decodeStoreID;
   private final DBClient dbEncodeClient;
@@ -39,6 +40,10 @@ public final class DBUpdater implements Runnable, Closeable {
     this.encodeQueryPool = encodeQueryPool;
     dbEncodeClient = DBManager.Factory.get().openDB(encodeStoreID);
     dbDecodeClient = DBManager.Factory.get().openDB(decodeStoreID);
+  }
+
+  public long getIndex() {
+    return index;
   }
 
   @Override

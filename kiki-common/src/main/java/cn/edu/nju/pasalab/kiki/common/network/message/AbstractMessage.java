@@ -18,10 +18,10 @@ public abstract class AbstractMessage implements Message {
         return DecodeRequest.decode(in);
       case DECODE_RESPONSE:
         return DecodeResponse.decode(in);
-      case CLOSE_ID_STORE_REQUEST:
-        return CloseIDStoreRequest.decode(in);
-      case CLOSE_ID_STORE_RESPONSE:
-        return CloseIDStoreResponse.decode(in);
+      case COMPLETE_ID_STORE_REQUEST:
+        return CompleteIDStoreRequest.decode(in);
+      case COMPLETE_ID_STORE_RESPONSE:
+        return CompleteIDStoreResponse.decode(in);
       case DELETE_ID_STORE_REQUEST:
         return DeleteIDStoreRequest.decode(in);
       case DELETE_ID_STORE_RESPONSE:

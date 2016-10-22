@@ -15,4 +15,8 @@ public final class Constants {
   public static final String SERVER_REDIS_HOST_NAME = "kiki.server.redis.host.name";
   public static final String SERVER_REDIS_PORT = "kiki.server.redis.port";
   public static final String SERVER_REDIS_QUERY_SLEEP_MS = "kiki.server.redis.query.sleep.ms";
+  public static final String SERVER_ENCODE_REDIS_QUERY_THREADS_NUM =
+      "kiki.server.encode.redis.threads.num";
+  public static final String SERVER_DECODE_REDIS_QUERY_THREADS_NUM =
+      "kiki.server.decode.redis.threads.num";
 }

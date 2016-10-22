@@ -2,11 +2,11 @@ package cn.edu.nju.pasalab.kiki.common.network.message;
 
 import io.netty.buffer.ByteBuf;
 
-public final class CloseIDStoreResponse extends AbstractMessage {
+public final class CompleteIDStoreRequest extends AbstractMessage {
   private final int storeID;
 
-  public CloseIDStoreResponse(int storeID) {
-    this.storeID = storeID;
+  public CompleteIDStoreRequest(int storeID) {
+    this.storeID  = storeID;
   }
 
   public int getStoreID() {
@@ -15,7 +15,7 @@ public final class CloseIDStoreResponse extends AbstractMessage {
 
   @Override
   public Type getType() {
-    return Type.CLOSE_ID_STORE_RESPONSE;
+    return Type.COMPLETE_ID_STORE_REQUEST;
   }
 
   @Override
@@ -26,10 +26,10 @@ public final class CloseIDStoreResponse extends AbstractMessage {
   @Override
   public void encode(ByteBuf out) {
     getType().encode(out);
-    out.writeInt(storeID);
+    out.writeInt(getStoreID());
   }
 
-  public static CloseIDStoreResponse decode(ByteBuf in) {
-    return new CloseIDStoreResponse(in.readInt());
+  public static CompleteIDStoreRequest decode(ByteBuf in) {
+    return new CompleteIDStoreRequest(in.readInt());
   }
 }

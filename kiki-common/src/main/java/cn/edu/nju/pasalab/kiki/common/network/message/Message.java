@@ -12,8 +12,8 @@ public interface Message extends Encodable {
     ENCODE_RESPONSE(3),
     DECODE_REQUEST(4),
     DECODE_RESPONSE(5),
-    CLOSE_ID_STORE_REQUEST(6),
-    CLOSE_ID_STORE_RESPONSE(7),
+    COMPLETE_ID_STORE_REQUEST(6),
+    COMPLETE_ID_STORE_RESPONSE(7),
     DELETE_ID_STORE_REQUEST(8),
     DELETE_ID_STORE_RESPONSE(9),
     ID_STORE_SIZE_REQUEST(10),
@@ -54,9 +54,9 @@ public interface Message extends Encodable {
         case 5:
           return DECODE_RESPONSE;
         case 6:
-          return CLOSE_ID_STORE_REQUEST;
+          return COMPLETE_ID_STORE_REQUEST;
         case 7:
-          return CLOSE_ID_STORE_RESPONSE;
+          return COMPLETE_ID_STORE_RESPONSE;
         case 8:
           return DELETE_ID_STORE_REQUEST;
         case 9:
