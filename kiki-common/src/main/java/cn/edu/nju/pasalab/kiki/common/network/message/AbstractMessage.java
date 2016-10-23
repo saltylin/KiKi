@@ -1,6 +1,7 @@
 package cn.edu.nju.pasalab.kiki.common.network.message;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 public abstract class AbstractMessage implements Message {
   public static Message decode(ByteBuf in) {
@@ -36,5 +37,9 @@ public abstract class AbstractMessage implements Message {
         throw new IllegalArgumentException(
             String.format("No corresponding message for type %s", type));
     }
+  }
+
+  public static LengthFieldBasedFrameDecoder createFrameDecoder() {
+    return new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, -4, 4);
   }
 }
