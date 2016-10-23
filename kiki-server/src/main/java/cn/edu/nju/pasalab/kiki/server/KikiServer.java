@@ -3,8 +3,8 @@ package cn.edu.nju.pasalab.kiki.server;
 import cn.edu.nju.pasalab.kiki.common.Configuration;
 import cn.edu.nju.pasalab.kiki.common.Constants;
 import cn.edu.nju.pasalab.kiki.common.network.message.AbstractMessage;
-import cn.edu.nju.pasalab.kiki.common.network.message.MessageDecoder;
-import cn.edu.nju.pasalab.kiki.common.network.message.MessageEncoder;
+import cn.edu.nju.pasalab.kiki.common.network.MessageDecoder;
+import cn.edu.nju.pasalab.kiki.common.network.MessageEncoder;
 
 import com.google.common.base.Throwables;
 

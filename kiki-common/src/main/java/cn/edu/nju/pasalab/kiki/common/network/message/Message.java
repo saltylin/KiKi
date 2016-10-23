@@ -1,5 +1,6 @@
 package cn.edu.nju.pasalab.kiki.common.network.message;
 
+import cn.edu.nju.pasalab.kiki.common.network.Encodable;
 import io.netty.buffer.ByteBuf;
 
 public interface Message extends Encodable {

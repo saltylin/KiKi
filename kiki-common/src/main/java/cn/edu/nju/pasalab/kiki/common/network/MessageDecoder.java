@@ -1,4 +1,6 @@
-package cn.edu.nju.pasalab.kiki.common.network.message;
+package cn.edu.nju.pasalab.kiki.common.network;
+
+import cn.edu.nju.pasalab.kiki.common.network.message.AbstractMessage;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -1,33 +1,46 @@
 package cn.edu.nju.pasalab.kiki.client;
 
+import cn.edu.nju.pasalab.kiki.common.network.message.CompleteIDStoreRequest;
+import cn.edu.nju.pasalab.kiki.common.network.message.CreateIDStoreRequest;
+import cn.edu.nju.pasalab.kiki.common.network.message.DeleteIDStoreRequest;
+import cn.edu.nju.pasalab.kiki.common.network.message.IDStoreSizeRequest;
+
 import java.io.IOException;
 
-public interface KikiClient {
-  long encode(byte[] key) throws IOException;
+public final class KikiClient extends AbstractKikiClient {
+  public KikiClient(String serverHostName, int serverPort) throws IOException {
+    super(serverHostName, serverPort);
+  }
 
-  byte[] decode(long id) throws IOException;
-
-  void close() throws IOException;
-
-  static class Factory {
-    public static void createIDStore(int storeID) throws IOException {
-
+  public void createIDStore(int storeID) throws IOException {
+    try {
+      getNetworkProxy().createIDStore(new CreateIDStoreRequest(storeID));
+    } catch (InterruptedException e) {
+      throw new IOException(e);
     }
+  }
 
-    public static KikiClient get(int storeID) throws IOException {
-      return new KikiClient() {
-        public long encode(byte[] key) throws IOException {
-          return 0;
-        }
+  public void completeIDStore(int storeID) throws IOException {
+    try {
+      getNetworkProxy().completeIDStore(new CompleteIDStoreRequest(storeID));
+    } catch (InterruptedException e) {
+      throw new IOException(e);
+    }
+  }
 
-        public byte[] decode(long id) throws IOException {
-          return new byte[0];
-        }
+  public void deleteIDStore(int storeID) throws IOException {
+    try {
+      getNetworkProxy().deleteIDStore(new DeleteIDStoreRequest(storeID));
+    } catch (InterruptedException e) {
+      throw new IOException(e);
+    }
+  }
 
-        public void close() throws IOException {
-
-        }
-      };
+  public long getIDStoreSize(int storeID) throws IOException {
+    try {
+      return getNetworkProxy().getIDStoreSize(new IDStoreSizeRequest(storeID)).getSize();
+    } catch (InterruptedException e) {
+      throw new IOException(e);
     }
   }
 }
