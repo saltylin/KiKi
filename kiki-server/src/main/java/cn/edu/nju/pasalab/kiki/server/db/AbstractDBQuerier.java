@@ -12,12 +12,12 @@ public abstract class AbstractDBQuerier implements Runnable, Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final int storeID;
-  private final DBClient dbClient;
+  private final DBStore dbStore;
   private volatile boolean closed = false;
 
   public AbstractDBQuerier(int storeID) throws IOException {
     this.storeID = storeID;
-    dbClient = DBManager.Factory.get().openDB(storeID);
+    dbStore = DBManager.Factory.get().openDB(storeID);
   }
 
   @Override
@@ -32,8 +32,9 @@ public abstract class AbstractDBQuerier implements Runnable, Closeable {
   }
 
   @Override
-  public void close() {
+  public void close() throws IOException {
     closed = true;
+    dbStore.close();
   }
 
   public boolean isClosed() {
@@ -42,7 +43,7 @@ public abstract class AbstractDBQuerier implements Runnable, Closeable {
 
   abstract protected void query() throws Exception;
 
-  protected DBClient getDBClient() {
-    return dbClient;
+  protected DBStore getDBStore() {
+    return dbStore;
   }
 }

@@ -35,7 +35,7 @@ public final class DBEncodeQuerier extends AbstractDBQuerier {
     if (isClosed()) {
       return;
     }
-    byte[] res = getDBClient().get(query.getKey());
+    byte[] res = getDBStore().get(query.getKey());
     if (res == null) {
       // This key hasn't been encoded
       updateQueryQueue.add(query);

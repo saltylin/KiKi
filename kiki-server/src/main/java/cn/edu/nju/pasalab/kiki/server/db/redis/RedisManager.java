@@ -3,7 +3,7 @@ package cn.edu.nju.pasalab.kiki.server.db.redis;
 import cn.edu.nju.pasalab.kiki.common.Configuration;
 import cn.edu.nju.pasalab.kiki.common.Constants;
 import cn.edu.nju.pasalab.kiki.server.ServerContext;
-import cn.edu.nju.pasalab.kiki.server.db.DBClient;
+import cn.edu.nju.pasalab.kiki.server.db.DBStore;
 import cn.edu.nju.pasalab.kiki.server.db.DBManager;
 
 import redis.clients.jedis.Jedis;
@@ -27,10 +27,10 @@ public final class RedisManager implements DBManager {
   }
 
   @Override
-  public DBClient openDB(int storeID) throws IOException {
+  public DBStore openDB(int storeID) throws IOException {
     Jedis jedis = new Jedis(redisHostName, redisPort);
     jedis.select(storeID);
-    return new RedisClient(storeID, jedis);
+    return new RedisStore(storeID, jedis);
   }
 
   @Override

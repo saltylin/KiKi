@@ -3,7 +3,7 @@ package cn.edu.nju.pasalab.kiki.server.db;
 import java.io.Closeable;
 import java.io.IOException;
 
-public interface DBClient extends Closeable {
+public interface DBStore extends Closeable {
   /**
    * Puts a key-value pair into the DB store.
    *

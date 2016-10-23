@@ -2,7 +2,6 @@ package cn.edu.nju.pasalab.kiki.server.db;
 
 import cn.edu.nju.pasalab.kiki.common.Constants;
 import cn.edu.nju.pasalab.kiki.common.util.BytesUtils;
-import cn.edu.nju.pasalab.kiki.server.StoreMeta;
 import cn.edu.nju.pasalab.kiki.server.meta.EncodeQuery;
 import cn.edu.nju.pasalab.kiki.server.resource.QueryPool;
 
@@ -26,8 +25,8 @@ public final class DBUpdater implements Runnable, Closeable {
   private volatile long index;
   private final int encodeStoreID;
   private final int decodeStoreID;
-  private final DBClient dbEncodeClient;
-  private final DBClient dbDecodeClient;
+  private final DBStore dbEncodeStore;
+  private final DBStore dbDecodeStore;
   private final LinkedBlockingQueue<EncodeQuery> encodeQueryQueue;
   private final QueryPool<EncodeQuery> encodeQueryPool;
   private volatile boolean closed = false;
@@ -38,8 +37,8 @@ public final class DBUpdater implements Runnable, Closeable {
     this.decodeStoreID = decodeStoreID;
     this.encodeQueryQueue = encodeQueryQueue;
     this.encodeQueryPool = encodeQueryPool;
-    dbEncodeClient = DBManager.Factory.get().openDB(encodeStoreID);
-    dbDecodeClient = DBManager.Factory.get().openDB(decodeStoreID);
+    dbEncodeStore = DBManager.Factory.get().openDB(encodeStoreID);
+    dbDecodeStore = DBManager.Factory.get().openDB(decodeStoreID);
   }
 
   public long getIndex() {
@@ -56,9 +55,9 @@ public final class DBUpdater implements Runnable, Closeable {
           return;
         }
         byte[] IDBytes = BytesUtils.toBytes(index);
-        if (dbEncodeClient.putIfNotExist(query.keyBytes(), IDBytes)) {
+        if (dbEncodeStore.putIfNotExist(query.keyBytes(), IDBytes)) {
           // The key is successfully encoded
-          dbDecodeClient.put(IDBytes, query.getKey());
+          dbDecodeStore.put(IDBytes, query.getKey());
           query.reply(IDBytes);
           ++index;
         } else {
@@ -73,9 +72,11 @@ public final class DBUpdater implements Runnable, Closeable {
   }
 
   @Override
-  public void close() {
+  public void close() throws IOException {
     closed = true;
     // Prevents deadlock
     encodeQueryQueue.add(END_FLAG);
+    dbEncodeStore.close();
+    dbDecodeStore.close();
   }
 }

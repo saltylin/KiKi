@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface DBManager {
   void createDB(int storeID) throws IOException;
-  DBClient openDB(int storeID) throws IOException;
+  DBStore openDB(int storeID) throws IOException;
   void deleteDB(int storeID) throws IOException;
 
   class Factory {

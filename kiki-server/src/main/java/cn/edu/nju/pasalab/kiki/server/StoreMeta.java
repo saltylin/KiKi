@@ -7,6 +7,7 @@ import cn.edu.nju.pasalab.kiki.server.meta.DecodeQuery;
 import cn.edu.nju.pasalab.kiki.server.meta.EncodeQuery;
 import cn.edu.nju.pasalab.kiki.server.resource.QueryPool;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,12 +45,15 @@ public final class StoreMeta {
     state = State.UPDATING;
   }
 
-  public void complete() {
-    dbUpdater.close();
-    state = State.COMPLETED;
+  public void complete() throws IOException {
+    try {
+      dbUpdater.close();
+    } finally {
+      state = State.COMPLETED;
+    }
   }
 
-  public void delete() {
+  public void delete() throws IOException {
     for (DBEncodeQuerier querier : dbEncodeQuerierList) {
       querier.close();
     }

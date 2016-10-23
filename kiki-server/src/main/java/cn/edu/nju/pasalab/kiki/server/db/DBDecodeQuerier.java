@@ -28,7 +28,7 @@ public final class DBDecodeQuerier extends AbstractDBQuerier {
     if (isClosed()) {
       return;
     }
-    byte[] res = getDBClient().get(query.keyBytes());
+    byte[] res = getDBStore().get(query.keyBytes());
     if (res == null) {
       // Illegal query ID
       query.fail(String.format("No key is associated with the given ID %d", query.getID()));

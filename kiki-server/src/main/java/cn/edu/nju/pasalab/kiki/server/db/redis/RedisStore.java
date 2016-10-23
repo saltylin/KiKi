@@ -1,15 +1,15 @@
 package cn.edu.nju.pasalab.kiki.server.db.redis;
 
-import cn.edu.nju.pasalab.kiki.server.db.AbstractDBClient;
+import cn.edu.nju.pasalab.kiki.server.db.AbstractDBStore;
 
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 
-public class RedisClient extends AbstractDBClient {
+public class RedisStore extends AbstractDBStore {
   private final Jedis jedis;
 
-  public RedisClient(int storeID, Jedis jedis) {
+  public RedisStore(int storeID, Jedis jedis) {
     super(storeID);
     this.jedis = jedis;
   }
