@@ -20,12 +20,13 @@ public final class KikiClientChannelHandler extends SimpleChannelInboundHandler<
 
   @Override
   public void channelRead0(ChannelHandlerContext ctx, Message msg) {
+    LOG.info(String.format("Receive a %s message from the server", msg.getType()));
     networkProxy.signalResponse(msg);
   }
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) {
     LOG.error("Exception thrown", e);
-    networkProxy.close();
+    ctx.close();
   }
 }

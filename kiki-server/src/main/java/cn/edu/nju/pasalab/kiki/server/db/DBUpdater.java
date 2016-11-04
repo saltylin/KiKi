@@ -23,22 +23,22 @@ public final class DBUpdater implements Runnable, Closeable {
    * {@link DBUpdater}, no concurrent problems will occur.
    */
   private volatile long index;
-  private final int encodeStoreID;
-  private final int decodeStoreID;
+  private final int encodeTableID;
+  private final int decodeTableID;
   private final DBStore dbEncodeStore;
   private final DBStore dbDecodeStore;
   private final LinkedBlockingQueue<EncodeQuery> encodeQueryQueue;
   private final QueryPool<EncodeQuery> encodeQueryPool;
   private volatile boolean closed = false;
 
-  public DBUpdater(int encodeStoreID, int decodeStoreID, LinkedBlockingQueue<EncodeQuery>
+  public DBUpdater(int encodeTableID, int decodeTableID, LinkedBlockingQueue<EncodeQuery>
       encodeQueryQueue, QueryPool<EncodeQuery> encodeQueryPool) throws IOException {
-    this.encodeStoreID = encodeStoreID;
-    this.decodeStoreID = decodeStoreID;
+    this.encodeTableID = encodeTableID;
+    this.decodeTableID = decodeTableID;
     this.encodeQueryQueue = encodeQueryQueue;
     this.encodeQueryPool = encodeQueryPool;
-    dbEncodeStore = DBManager.Factory.get().openDB(encodeStoreID);
-    dbDecodeStore = DBManager.Factory.get().openDB(decodeStoreID);
+    dbEncodeStore = DBManager.Factory.get().openDB(encodeTableID);
+    dbDecodeStore = DBManager.Factory.get().openDB(decodeTableID);
   }
 
   public long getIndex() {

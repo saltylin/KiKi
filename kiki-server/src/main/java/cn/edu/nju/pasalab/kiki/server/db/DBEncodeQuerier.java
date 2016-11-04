@@ -17,9 +17,9 @@ public final class DBEncodeQuerier extends AbstractDBQuerier {
   private final LinkedBlockingQueue<EncodeQuery> updateQueryQueue;
   private final long sleepMs;
 
-  public DBEncodeQuerier(int storeID, QueryPool<EncodeQuery> queryPool,
+  public DBEncodeQuerier(int tableID, QueryPool<EncodeQuery> queryPool,
       LinkedBlockingQueue<EncodeQuery> updateQueryQueue) throws IOException {
-    super(storeID);
+    super(tableID);
     this.queryPool = queryPool;
     this.updateQueryQueue = updateQueryQueue;
     sleepMs = ServerContext.getConf().getLong(Constants.SERVER_REDIS_QUERY_SLEEP_MS);

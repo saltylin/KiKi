@@ -22,21 +22,21 @@ public final class RedisManager implements DBManager {
   }
 
   @Override
-  public void createDB(int storeID) {
+  public void createDB(int tableID) {
     // Nothing to do
   }
 
   @Override
-  public DBStore openDB(int storeID) throws IOException {
+  public DBStore openDB(int tableID) throws IOException {
     Jedis jedis = new Jedis(redisHostName, redisPort);
-    jedis.select(storeID);
-    return new RedisStore(storeID, jedis);
+    jedis.select(tableID);
+    return new RedisStore(tableID, jedis);
   }
 
   @Override
-  public void deleteDB(int storeID) {
+  public void deleteDB(int tableID) {
     Jedis jedis = new Jedis(redisHostName, redisPort);
-    jedis.select(storeID);
+    jedis.select(tableID);
     jedis.flushDB();
     jedis.close();
   }

@@ -53,8 +53,7 @@ public final class KikiServer {
             pipeline.addLast("Channel handler", channelHandler);
           }
         })
-        .childOption(ChannelOption.SO_KEEPALIVE, true)
-        .childOption(ChannelOption.SO_BACKLOG, 128);
+        .childOption(ChannelOption.SO_KEEPALIVE, true);
 
     try {
       ChannelFuture future = bootstrap.bind(InetAddress.getByName(hostName), port).sync();

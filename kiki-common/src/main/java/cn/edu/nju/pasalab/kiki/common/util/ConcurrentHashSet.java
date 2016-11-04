@@ -12,7 +12,7 @@ public class ConcurrentHashSet<T> {
   }
 
   public void add(T elem) {
-    data.put(elem, null);
+    data.put(elem, 1);
   }
 
   public boolean isEmpty() {

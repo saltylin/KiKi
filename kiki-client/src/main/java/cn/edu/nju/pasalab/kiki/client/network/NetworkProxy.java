@@ -22,14 +22,18 @@ import com.google.common.base.Preconditions;
 
 import io.netty.channel.Channel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.concurrent.ThreadSafe;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
 
 @ThreadSafe
-public final class NetworkProxy implements Closeable {
+public final class NetworkProxy {
+  private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
+
   private final Configuration conf;
   private volatile Channel channel;
   private volatile boolean initialized = false;
@@ -173,6 +177,9 @@ public final class NetworkProxy implements Closeable {
       case DELETE_ID_STORE_RESPONSE:
         deleteIDStoreResponse = (DeleteIDStoreResponse) msg;
         break;
+      case ERROR_MESSAGE:
+        LOG.error("Receive an error message {}", ((ErrorMessage) msg).getInfo());
+        break;
       default:
         throw new IllegalArgumentException(String.format("Illegal received response type %s",
             msg.getType()));
@@ -180,11 +187,6 @@ public final class NetworkProxy implements Closeable {
     synchronized (signal) {
       signal.notify();
     }
-  }
-
-  @Override
-  public void close() {
-    channel.close();
   }
 
   private void checkInitialized() {

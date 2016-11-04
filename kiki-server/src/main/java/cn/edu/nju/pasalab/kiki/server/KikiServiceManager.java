@@ -62,12 +62,15 @@ public final class KikiServiceManager {
     StoreMeta storeMeta = createStoreMeta(storeID);
     storeIDToMetaMap.put(storeID, storeMeta);
     new Thread(storeMeta.getDBUpdater()).start();
+    LOG.info("Create ID store {}", storeID);
   }
 
   private StoreMeta createStoreMeta(int storeID) throws IOException {
     Pair<Integer, Integer> tableIDPair = generateTableIDPair();
-    createDBTable(tableIDPair.getLeft());
-    createDBTable(tableIDPair.getRight());
+    int encodeTableID = tableIDPair.getLeft();
+    int decodeTableID = tableIDPair.getRight();
+    createDBTable(encodeTableID);
+    createDBTable(decodeTableID);
     ExecutorService encodeService =
         ExceptionLoggedThreadPool.newFixedThreadPool(encodeQueryNumThreads);
     ExecutorService decodeService =
@@ -78,19 +81,22 @@ public final class KikiServiceManager {
     QueryPool<DecodeQuery> decodeQueryPool = new QueryPool<>(storeID);
     LinkedBlockingQueue<EncodeQuery> updateEncodeQueryQueue =
         new LinkedBlockingQueue<>();
-    DBUpdater dbUpdater = new DBUpdater(tableIDPair.getLeft(), tableIDPair.getRight(),
-        updateEncodeQueryQueue, encodeQueryPool);
+    DBUpdater dbUpdater =
+        new DBUpdater(encodeTableID, decodeTableID, updateEncodeQueryQueue, encodeQueryPool);
     for (int i = 0; i < encodeQueryNumThreads; ++i) {
-      dbEncodeQuerierList.add(
-          new DBEncodeQuerier(storeID, encodeQueryPool, updateEncodeQueryQueue));
+      DBEncodeQuerier encodeQuerier =
+          new DBEncodeQuerier(encodeTableID, encodeQueryPool, updateEncodeQueryQueue);
+      encodeService.submit(encodeQuerier);
+      dbEncodeQuerierList.add(encodeQuerier);
     }
     for (int i = 0; i < decodeQueryNumThreads; ++i) {
-      dbDecodeQuerierList.add(
-          new DBDecodeQuerier(storeID, decodeQueryPool));
+      DBDecodeQuerier decodeQuerier = new DBDecodeQuerier(decodeTableID, decodeQueryPool);
+      decodeService.submit(decodeQuerier);
+      dbDecodeQuerierList.add(decodeQuerier);
     }
-    return new StoreMeta(storeID, tableIDPair.getLeft(), tableIDPair.getRight(), encodeService,
-        decodeService, dbEncodeQuerierList, dbDecodeQuerierList, encodeQueryPool, decodeQueryPool,
-        dbUpdater, updateEncodeQueryQueue);
+    return new StoreMeta(storeID, encodeTableID, decodeTableID, encodeService, decodeService,
+        dbEncodeQuerierList, dbDecodeQuerierList, encodeQueryPool, decodeQueryPool, dbUpdater,
+        updateEncodeQueryQueue);
   }
 
   private void createDBTable(int tableID) throws IOException {
@@ -117,6 +123,7 @@ public final class KikiServiceManager {
     checkStoreExists(storeID);
     StoreMeta storeMeta = storeIDToMetaMap.get(storeID);
     storeMeta.complete();
+    LOG.info("Complete ID store {}", storeID);
   }
 
   public void deleteStore(int storeID) throws IOException {
@@ -130,6 +137,7 @@ public final class KikiServiceManager {
       storeIDSet.remove(storeID);
       storeIDToMetaMap.remove(storeID);
     }
+    LOG.info("Delete ID store {}", storeID);
   }
 
   public long getStoreSize(int storeID) throws IOException {

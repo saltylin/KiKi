@@ -11,13 +11,13 @@ import java.io.IOException;
 public abstract class AbstractDBQuerier implements Runnable, Closeable {
   private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
-  private final int storeID;
+  private final int tableID;
   private final DBStore dbStore;
   private volatile boolean closed = false;
 
-  public AbstractDBQuerier(int storeID) throws IOException {
-    this.storeID = storeID;
-    dbStore = DBManager.Factory.get().openDB(storeID);
+  public AbstractDBQuerier(int tableID) throws IOException {
+    this.tableID = tableID;
+    dbStore = DBManager.Factory.get().openDB(tableID);
   }
 
   @Override

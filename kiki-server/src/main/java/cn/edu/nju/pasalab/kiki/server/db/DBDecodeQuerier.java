@@ -14,8 +14,8 @@ public final class DBDecodeQuerier extends AbstractDBQuerier {
 
   private final QueryPool<DecodeQuery> queryPool;
 
-  public DBDecodeQuerier(int storeID, QueryPool<DecodeQuery> queryPool) throws IOException {
-    super(storeID);
+  public DBDecodeQuerier(int tableID, QueryPool<DecodeQuery> queryPool) throws IOException {
+    super(tableID);
     this.queryPool = queryPool;
   }
 

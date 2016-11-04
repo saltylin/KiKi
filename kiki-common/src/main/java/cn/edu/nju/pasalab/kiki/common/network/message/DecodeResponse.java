@@ -27,7 +27,7 @@ public final class DecodeResponse extends AbstractMessage {
 
   @Override
   public Type getType() {
-    return Type.DECODE_REQUEST;
+    return Type.DECODE_RESPONSE;
   }
 
   @Override

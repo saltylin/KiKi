@@ -7,7 +7,6 @@ import cn.edu.nju.pasalab.kiki.client.network.NetworkUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 
 import java.io.Closeable;
@@ -19,6 +18,8 @@ abstract class AbstractKikiClient implements Closeable {
   private final String serverHostName;
   private final int serverPort;
   private final KikiClientChannelHandler channelHandler;
+  private final Channel channel;
+  private final EventLoopGroup workerGroup;
   private final NetworkProxy networkProxy;
 
   protected AbstractKikiClient(String serverHostName, int serverPort) throws IOException {
@@ -26,20 +27,14 @@ abstract class AbstractKikiClient implements Closeable {
     this.serverPort = serverPort;
     networkProxy = new NetworkProxy();
     channelHandler = new KikiClientChannelHandler(networkProxy);
-    EventLoopGroup workerGroup = NetworkUtils.createWorkerGroup();
+    workerGroup = NetworkUtils.createWorkerGroup();
     Bootstrap bootstrap = NetworkUtils.createBootstrap(workerGroup, channelHandler);
 
     try {
       ChannelFuture future =
           bootstrap.connect(InetAddress.getByName(serverHostName), serverPort).sync();
-      Channel channel = future.channel();
+      channel = future.channel();
       networkProxy.initChannel(channel);
-      channel.closeFuture().addListener(new ChannelFutureListener() {
-        @Override
-        public void operationComplete(ChannelFuture future) throws Exception {
-          close();
-        }
-      });
     } catch (UnknownHostException | InterruptedException e) {
       throw new IOException(e);
     }
@@ -47,7 +42,8 @@ abstract class AbstractKikiClient implements Closeable {
 
   @Override
   public void close() {
-    networkProxy.close();
+    channel.close();
+    workerGroup.shutdownGracefully();
   }
 
   public String getServerHostName() {
